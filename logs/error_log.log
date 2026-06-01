@@ -1,0 +1,2 @@
+{"level":"error","message":"{\"timestamp\":\"2026-06-01T04:58:32.998Z\",\"method\":\"GET\",\"url\":\"/health\",\"statusCode\":304,\"ip\":\"::ffff:127.0.0.1\",\"durationMs\":5}"}
+{"level":"error","message":"{\"timestamp\":\"2026-06-01T04:58:33.098Z\",\"method\":\"GET\",\"url\":\"/favicon.ico\",\"statusCode\":404,\"ip\":\"::ffff:127.0.0.1\",\"durationMs\":3}"}
