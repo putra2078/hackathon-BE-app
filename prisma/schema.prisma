@@ -4,7 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -12,3 +12,98 @@ datasource db {
   provider = "postgresql"
 }
 
+model Product {
+  id          String   @id @default(uuid())
+  code        String   @unique
+  name        String
+  description String?
+  category    String
+  buyPrice    Float
+  sellPrice   Float
+  stock       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  boughtDetails BoughtProductDetail[]
+  stockIncrements StockIncrement[]
+
+  @@map("products")
+}
+
+model StockIncrement {
+  id        String   @id @default(uuid())
+  productId String
+  userId    String
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("stock_increments")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  email       String   @unique
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  transactions    Transaction[]
+  stockIncrements StockIncrement[]
+
+  @@map("users")
+}
+
+model Transaction {
+  id           String   @id @default(uuid())
+  userId       String
+  customerName String?
+  totalPrice   Float
+  status       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user               User                @relation(fields: [userId], references: [id])
+  detailTransactions DetailTransaction[]
+
+  @@map("transactions")
+}
+
+model DetailTransaction {
+  id                String   @id @default(uuid())
+  transactionId     String
+  totalModal        Float
+  totalProfit       Float
+  diskon            Float    @default(0)
+  nominalPembayaran Float
+  kembalian         Float
+  metodeBayar       String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  transaction   Transaction           @relation(fields: [transactionId], references: [id])
+  boughtProducts BoughtProductDetail[]
+
+  @@map("detail_transactions")
+}
+
+model BoughtProductDetail {
+  id                  String   @id @default(uuid())
+  detailTransactionId String
+  productId           String
+  name                String // Snapshot name
+  code                String // Snapshot code
+  buyPrice            Float // Snapshot buy price
+  sellPrice           Float // Snapshot sell price
+  quantity            Int
+  subtotal            Float
+  createdAt           DateTime @default(now())
+
+  detailTransaction DetailTransaction @relation(fields: [detailTransactionId], references: [id])
+  product           Product           @relation(fields: [productId], references: [id])
+
+  @@map("bought_product_details")
+}

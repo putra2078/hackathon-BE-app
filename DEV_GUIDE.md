@@ -4,7 +4,7 @@ Repositori ini berisi backend service API yang dibangun menggunakan **Node.js**,
 
 ---
 
-## 📋 Daftar Ini
+## 📋 Daftar Isi
 1. [Prasyarat Sistem](#1-prasyarat-sistem)
 2. [Langkah Instalasi Dependensi](#2-langkah-instalasi-dependensi)
 3. [Konfigurasi Environment (.env)](#3-konfigurasi-environment-env)
@@ -233,7 +233,7 @@ Semua endpoint API utama diberi prefix `/api/v1`. Berikut daftar endpoint yang d
 
 ### Error: `DATABASE_URL is not defined in environment variables`
 * **Penyebab:** Aplikasi tidak dapat menemukan file `.env` atau variabel `DATABASE_URL` di dalamnya.
-* **Solusi:** Pastikan file `.env` berada tepat di root folder proyek, bukan di dalam folder `cmd` atau `internal`, dan isinya sesuai format.
+* **Solusi:** Pastikan file `.env` berada tepat di root folder proyek, bukan di dalam folder `cmd` or `internal`, dan isinya sesuai format.
 
 ### Error: `Relation ... does not exist` atau error tabel PostgreSQL
 * **Penyebab:** Migrasi database belum dijalankan, sehingga tabel-tabel belum terbentuk di PostgreSQL.

@@ -1,10 +1,12 @@
 const express = require("express");
-const fs = require("fs");
+const cors = require("cors");
 const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
+const fs = require("fs");
 const winston = require("winston");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Create logs directory
 const logDir = path.join(__dirname, "../logs");
@@ -32,6 +34,7 @@ const errorLogger = winston.createLogger({
 });
 
 // Middleware
+app.use(cors()); // Allow all domains
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -73,6 +76,12 @@ app.get("/health", (req, res) => {
     message: "Server is running",
   });
 });
+
+// Import Router
+const apiRouter = require("../internal/app/router/router");
+
+// Register API Routes
+app.use("/api/v1", apiRouter);
 
 // Root Route
 app.get("/", (req, res) => {
