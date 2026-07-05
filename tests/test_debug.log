@@ -1,0 +1,141 @@
+
+> hackathon-be-app@1.0.0 test
+> jest tests/chatbot.test.js
+
+  console.log
+    ◇ injected env (6) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+
+      at _log (node_modules/dotenv/lib/main.js:131:11)
+
+  console.log
+    ◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+
+      at _log (node_modules/dotenv/lib/main.js:131:11)
+
+  console.log
+    ◇ injected env (0) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+
+      at _log (node_modules/dotenv/lib/main.js:131:11)
+
+  console.log
+    ◇ injected env (0) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+
+      at _log (node_modules/dotenv/lib/main.js:131:11)
+
+  console.log
+    ◇ injected env (0) from .env // tip: ⌘ override existing { override: true }
+
+      at _log (node_modules/dotenv/lib/main.js:131:11)
+
+  console.log
+    ◇ injected env (0) from .env // tip: ⌘ enable debugging { debug: true }
+
+      at _log (node_modules/dotenv/lib/main.js:131:11)
+
+  console.log
+    beforeAll: Starting server...
+
+      at Object.log (tests/chatbot.test.js:20:11)
+
+  console.log
+    beforeAll: Server started
+
+      at Server.log (tests/chatbot.test.js:27:15)
+
+  console.log
+    beforeAll: Creating test user...
+
+      at Object.log (tests/chatbot.test.js:33:11)
+
+  console.log
+    beforeAll: Test user created
+
+      at Object.log (tests/chatbot.test.js:43:15)
+
+  console.log
+    beforeAll: Creating test conversation...
+
+      at Object.log (tests/chatbot.test.js:50:11)
+
+  console.log
+    beforeAll: Test conversation created: b1a72f98-13a6-4434-ab11-dd7c9d8a9516
+
+      at Object.log (tests/chatbot.test.js:54:15)
+
+  console.log
+    User connected: 36r9ZDJvjNWvBObIAAAB
+
+      at Namespace.log (internal/app/domain/chatbot/websocket.js:12:13)
+
+  console.log
+    afterAll: Shutting down...
+
+      at Object.log (tests/chatbot.test.js:62:11)
+
+  console.log
+    afterAll: Socket disconnected
+
+      at Object.log (tests/chatbot.test.js:65:15)
+
+  console.log
+    User disconnected: 36r9ZDJvjNWvBObIAAAB
+
+      at Socket.log (internal/app/domain/chatbot/websocket.js:15:15)
+
+FAIL tests/chatbot.test.js (52.416 s)
+  ● Chatbot API & WebSocket › 1. should successfully send message via REST API (sync)
+
+    thrown: "Exceeded timeout of 10000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      94 |   
+      95 |   // 1. Pesan berhasil masuk
+    > 96 |   it('1. should successfully send message via REST API (sync)', async () => {
+         |   ^
+      97 |     const res = await request(server)
+      98 |       .post(`/api/v1/chatbot/conversations/${testConversationId}/messages/sync`)
+      99 |       .set('Authorization', `Bearer ${VALID_TOKEN}`)
+
+      at it (tests/chatbot.test.js:96:3)
+      at Object.describe (tests/chatbot.test.js:93:1)
+
+  ● Chatbot API & WebSocket › 2. should return error if message is missing
+
+    thrown: "Exceeded timeout of 10000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      105 |
+      106 |   // 2. Pesan gagal masuk
+    > 107 |   it('2. should return error if message is missing', async () => {
+          |   ^
+      108 |     const res = await request(server)
+      109 |       .post(`/api/v1/chatbot/conversations/${testConversationId}/messages/sync`)
+      110 |       .set('Authorization', `Bearer ${VALID_TOKEN}`)
+
+      at it (tests/chatbot.test.js:107:3)
+      at Object.describe (tests/chatbot.test.js:93:1)
+
+
+  ● Test suite failed to run
+
+    thrown: "Exceeded timeout of 30000 ms for a hook.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      59 | });
+      60 |
+    > 61 | afterAll(async () => {
+         | ^
+      62 |   console.log('afterAll: Shutting down...');
+      63 |   if (socketClient) {
+      64 |       socketClient.disconnect();
+
+      at Object.afterAll (tests/chatbot.test.js:61:1)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 1 passed, 3 total
+Snapshots:   0 total
+Time:        52.678 s, estimated 76 s
+Ran all test suites matching tests/chatbot.test.js.
+Jest did not exit one second after the test run has completed.
+
+'This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with `--detectOpenHandles` to troubleshoot this issue.

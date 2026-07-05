@@ -4,16 +4,17 @@
 
 const CreateTransactionRequest = (data) => ({
   userId: data.userId,
+  companyId: data.companyId || null,
   customerName: data.customerName || null,
   totalPrice: parseFloat(data.totalPrice),
   status: data.status || "PENDING",
   detail: {
-    totalModal: parseFloat(data.detail.totalModal),
+    totalCapital: parseFloat(data.detail.totalCapital),
     totalProfit: parseFloat(data.detail.totalProfit),
-    diskon: parseFloat(data.detail.diskon || 0),
-    nominalPembayaran: parseFloat(data.detail.nominalPembayaran),
-    kembalian: parseFloat(data.detail.kembalian),
-    metodeBayar: data.detail.metodeBayar,
+    discount: parseFloat(data.detail.discount || 0),
+    paymentAmount: parseFloat(data.detail.paymentAmount),
+    changeAmount: parseFloat(data.detail.changeAmount),
+    paymentMethod: data.detail.paymentMethod,
     products: data.detail.products.map((p) => ({
       productId: p.productId,
       quantity: parseInt(p.quantity),
@@ -24,6 +25,7 @@ const CreateTransactionRequest = (data) => ({
 
 const UpdateTransactionRequest = (data) => ({
   userId: data.userId,
+  companyId: data.companyId,
   customerName: data.customerName,
   totalPrice: data.totalPrice ? parseFloat(data.totalPrice) : undefined,
   status: data.status,
@@ -32,6 +34,7 @@ const UpdateTransactionRequest = (data) => ({
 const TransactionResponse = (transaction) => ({
   id: transaction.id,
   userId: transaction.userId,
+  companyId: transaction.companyId,
   customerName: transaction.customerName,
   totalPrice: transaction.totalPrice,
   status: transaction.status,
@@ -47,12 +50,12 @@ const TransactionResponse = (transaction) => ({
   details: transaction.detailTransactions
     ? transaction.detailTransactions.map((detail) => ({
         id: detail.id,
-        totalModal: detail.totalModal,
+        totalCapital: detail.totalCapital,
         totalProfit: detail.totalProfit,
-        diskon: detail.diskon,
-        nominalPembayaran: detail.nominalPembayaran,
-        kembalian: detail.kembalian,
-        metodeBayar: detail.metodeBayar,
+        discount: detail.discount,
+        paymentAmount: detail.paymentAmount,
+        changeAmount: detail.changeAmount,
+        paymentMethod: detail.paymentMethod,
         boughtProducts: detail.boughtProducts
           ? detail.boughtProducts.map((bp) => ({
               id: bp.id,

@@ -6,3 +6,4 @@
 {"level":"error","message":"{\"timestamp\":\"2026-06-22T04:06:09.544Z\",\"method\":\"POST\",\"url\":\"/api/v1/users/register?%22name%22=%22Wowo%22&%22email%22=%22wowo%40sawit.id%22&%22password%22=%22admin123%22\",\"statusCode\":500,\"ip\":\"::1\",\"durationMs\":1}"}
 {"level":"error","message":"{\"timestamp\":\"2026-06-22T04:06:15.253Z\",\"method\":\"POST\",\"url\":\"/api/v1/users/register?%22email%22=%22wowo%40sawit.id%22&%22password%22=%22admin123%22\",\"statusCode\":500,\"ip\":\"::1\",\"durationMs\":6}"}
 {"level":"error","message":"{\"timestamp\":\"2026-06-22T05:04:54.498Z\",\"method\":\"POST\",\"url\":\"/api/v1/login\",\"statusCode\":404,\"ip\":\"::1\",\"durationMs\":0,\"body\":{\"email\":\"padijaya773@gmail.com\",\"password\":\"210208\"}}"}
+{"level":"error","message":"{\"timestamp\":\"2026-07-02T15:30:16.572Z\",\"method\":\"POST\",\"url\":\"/api/v1/chatbot/send\",\"statusCode\":400,\"ip\":\"::ffff:127.0.0.1\",\"durationMs\":1,\"body\":{}}"}

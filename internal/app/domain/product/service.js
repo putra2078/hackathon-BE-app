@@ -6,6 +6,7 @@
 const productRepository = require("./repository");
 const prisma = require("../../../pkg/prisma");
 const { ProductResponse, StockResponse } = require("./dto");
+const { generateProductCode } = require("../../../pkg/code_utils");
 
 const getAllProducts = async () => {
   // Logic Flow:
@@ -36,9 +37,12 @@ const getProductById = async (id) => {
 
 const createProduct = async (productData) => {
   // Logic Flow:
-  // 1. Simpan product baru via repository
-  // 2. Kembalikan data yang sudah ditransformasi
-  const newProduct = await productRepository.create(productData);
+  // 1. Generate unique product code
+  // 2. Simpan product baru via repository
+  // 3. Kembalikan data yang sudah ditransformasi
+  const code = generateProductCode();
+  const dataToSave = { ...productData, code };
+  const newProduct = await productRepository.create(dataToSave);
   return ProductResponse(newProduct);
 };
 

@@ -8,8 +8,13 @@ if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not defined in environment variables");
 }
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+let prisma;
+
+if (!global.prisma) {
+  const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+  const adapter = new PrismaPg(pool);
+  global.prisma = new PrismaClient({ adapter });
+}
+prisma = global.prisma;
 
 module.exports = prisma;

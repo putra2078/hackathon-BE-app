@@ -122,10 +122,30 @@ const remove = async (req, res) => {
   }
 };
 
+const refresh = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res.status(400).json({ success: false, message: "Refresh token is required" });
+    }
+    const result = await userService.refresh(refreshToken);
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getAll,
   login,
   register,
+  refresh,
   getById,
   create,
   update,

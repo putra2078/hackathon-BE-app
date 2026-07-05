@@ -6,7 +6,10 @@
 const express = require("express");
 const router = express.Router();
 const productHandler = require("./handler");
-const authMiddleware = require("../middleware/auth");
+const JWTMiddleware = require("../../../pkg/middleware/jwt");
+
+// Apply JWT Middleware to all routes in this module
+router.use(JWTMiddleware);
 
 // Endpoint: [GET] /products
 // Deskripsi: Mengambil semua daftar product
@@ -18,8 +21,8 @@ router.get("/stock", productHandler.getStock);
 
 // Endpoint: [PATCH] /products/stock
 // Deskripsi: Mengupdate stok product secara bulk
-router.patch("/stock", authMiddleware, productHandler.patchStock);
-...
+router.patch("/stock", productHandler.patchStock);
+
 // Endpoint: [GET] /products/:id
 // Deskripsi: Mengambil detail satu product berdasarkan ID
 router.get("/:id", productHandler.getById);
@@ -37,3 +40,4 @@ router.put("/:id", productHandler.update);
 router.delete("/:id", productHandler.remove);
 
 module.exports = router;
+

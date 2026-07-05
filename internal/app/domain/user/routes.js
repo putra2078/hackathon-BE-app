@@ -6,27 +6,21 @@
 const express = require("express");
 const router = express.Router();
 const userHandler = require("./handler");
+const JWTMiddleware = require("../../../pkg/middleware/jwt");
 
-// Endpoint: [GET] /users
-router.get("/", userHandler.getAll);
-
-// Endpoint: [POST] /users/login
+// Public routes
 router.post("/login", userHandler.login);
-
-// Endpoint: [POST] /users/register
 router.post("/register", userHandler.register);
+router.post("/refresh", userHandler.refresh);
 
-// Endpoint: [GET] /users/:id
+// Apply JWT Middleware to protected routes
+router.use(JWTMiddleware);
+
+// Protected routes
+router.get("/", userHandler.getAll);
 router.get("/:id", userHandler.getById);
-
-// Endpoint: [POST] /users
 router.post("/", userHandler.create);
-
-// Endpoint: [PUT] /users/:id
 router.put("/:id", userHandler.update);
-
-// Endpoint: [DELETE] /users/:id
 router.delete("/:id", userHandler.remove);
-
 
 module.exports = router;

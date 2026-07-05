@@ -12,12 +12,37 @@ datasource db {
   provider = "postgresql"
 }
 
+model Expense {
+  id          String   @id @default(uuid())
+  name        String
+  amount      Float
+  category    String?
+  description String?
+  createdAt   DateTime @default(now())
+
+  @@map("expenses")
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  products    Product[]
+
+  @@map("categories")
+}
+
 model Product {
   id          String   @id @default(uuid())
   code        String   @unique
   name        String
   description String?
-  category    String
+  image       String?
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
   buyPrice    Float
   sellPrice   Float
   stock       Int
@@ -48,11 +73,13 @@ model User {
   name        String
   email       String   @unique
   password    String
+  companyId   String?  @map("company_id")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   transactions    Transaction[]
   stockIncrements StockIncrement[]
+  conversations   Conversation[]
 
   @@map("users")
 }
@@ -60,6 +87,7 @@ model User {
 model Transaction {
   id           String   @id @default(uuid())
   userId       String
+  companyId    String?  @map("company_id")
   customerName String?
   totalPrice   Float
   status       String
@@ -75,12 +103,12 @@ model Transaction {
 model DetailTransaction {
   id                String   @id @default(uuid())
   transactionId     String
-  totalModal        Float
+  totalCapital      Float
   totalProfit       Float
-  diskon            Float    @default(0)
-  nominalPembayaran Float
-  kembalian         Float
-  metodeBayar       String
+  discount          Float    @default(0)
+  paymentAmount     Float
+  changeAmount      Float
+  paymentMethod     String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -106,4 +134,58 @@ model BoughtProductDetail {
   product           Product           @relation(fields: [productId], references: [id])
 
   @@map("bought_product_details")
+}
+
+model Conversation {
+  id          String   @id @default(uuid())
+  userId      String
+  title       String   @default("New Conversation")
+  lastMessage String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+  summaries Summary[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String
+  role           String
+  content        String
+  token          Int?     @default(0)
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  attachments  Attachment[]
+
+  @@map("messages")
+}
+
+model Summary {
+  id             String   @id @default(uuid())
+  conversationId String
+  summary        String
+  lastMessageId  String?
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("summaries")
+}
+
+model Attachment {
+  id        String   @id @default(uuid())
+  messageId String
+  filename  String
+  mimeType  String
+  url       String
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@map("attachments")
 }

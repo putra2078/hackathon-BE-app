@@ -32,6 +32,9 @@ Berikut adalah pemetaan endpoint API untuk modul `User`, `Product`, dan `Transac
 
 ---
 
+
+---
+
 ## 3. Transaction Module
 **Base Path:** `/transactions`
 
@@ -39,6 +42,19 @@ Berikut adalah pemetaan endpoint API untuk modul `User`, `Product`, dan `Transac
 | :--- | :--- | :--- | :--- |
 | `/` | `GET` | Ambil semua transaksi | - |
 | `/:id` | `GET` | Ambil detail transaksi | Path Parameter: `id` |
-| `/` | `POST` | Buat transaksi | `{ "userId": 1, "customerName": "Budi", "totalPrice": 14000, "detail": { "totalModal": 10000, "totalProfit": 4000, "nominalPembayaran": 20000, "kembalian": 6000, "metodeBayar": "CASH", "products": [{"productId": 1, "quantity": 2}] } }` |
+| `/` | `POST` | Buat transaksi | `{ "userId": 1, "customerName": "Budi", "totalPrice": 14000, "detail": { "totalCapital": 10000, "totalProfit": 4000, "paymentAmount": 20000, "changeAmount": 6000, "paymentMethod": "CASH", "products": [{"productId": 1, "quantity": 2}] } }` |
 | `/:id` | `PUT` | Update transaksi | `{"status": "COMPLETED"}` |
 | `/:id` | `DELETE`| Hapus transaksi | Path Parameter: `id` |
+
+---
+
+## 4. Report Module
+**Base Path:** `/reports`
+
+| Endpoint | Method | Deskripsi | Payload / Parameter Contoh |
+| :--- | :--- | :--- | :--- |
+| `/sales` | `GET` | Laporan Penjualan | `startDate=2026-06-01T00:00:00Z&endDate=2026-06-30T23:59:59Z` |
+| `/analytics` | `GET` | Analisa Produk (Top/Least) | `startDate=2026-06-01T00:00:00Z&endDate=2026-06-30T23:59:59Z` |
+| `/expenses` | `GET` | Laporan Detail Pengeluaran | `startDate=2026-06-01T00:00:00Z&endDate=2026-06-30T23:59:59Z` |
+| `/profit` | `GET` | Laporan Profit | `startDate=2026-06-01T00:00:00Z&endDate=2026-06-30T23:59:59Z` |
+| `/export` | `GET` | Export Laporan (Excel/CSV) | `type=excel&reportType=sales&startDate=2026-06-01T00:00:00Z&endDate=2026-06-30T23:59:59Z` |

@@ -6,6 +6,10 @@
 const express = require("express");
 const router = express.Router();
 const transactionHandler = require("./handler");
+const JWTMiddleware = require("../../../pkg/middleware/jwt");
+
+// Apply JWT Middleware to all routes in this module
+router.use(JWTMiddleware);
 
 // Endpoint: [GET] /transactions
 // Deskripsi: Mengambil semua daftar transaksi

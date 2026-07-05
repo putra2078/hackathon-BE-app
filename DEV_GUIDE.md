@@ -192,7 +192,48 @@ Berikut adalah gambaran struktur folder utama dari backend service ini:
 
 ## 8. Dokumentasi API & Endpoint
 
-Semua endpoint API utama diberi prefix `/api/v1`. Berikut daftar endpoint yang dapat diakses:
+Semua endpoint API utama diberi prefix `/api/v1`. 
+
+### Autentikasi
+Untuk mengakses endpoint yang diproteksi, Anda harus menyertakan token JWT pada header `Authorization` dengan format:
+
+```
+Authorization: Bearer <your_access_token>
+```
+
+### Mekanisme Token Refresh
+Sistem ini menggunakan dua jenis token:
+1. **Access Token** (masa berlaku 1 jam): Digunakan untuk autentikasi API.
+2. **Refresh Token** (masa berlaku 7 hari): Digunakan untuk mendapatkan access token baru saat access token kedaluwarsa.
+
+#### Cara Mendapatkan Token
+Saat melakukan login di `POST /api/v1/users/login`, server akan mengembalikan:
+```json
+{
+  "success": true,
+  "data": {
+    "user": { ... },
+    "accessToken": "...",
+    "refreshToken": "..."
+  }
+}
+```
+
+#### Cara Refresh Token
+Jika `accessToken` kedaluwarsa, kirim `refreshToken` ke endpoint:
+`POST /api/v1/users/refresh`
+Request body:
+```json
+{
+  "refreshToken": "<your_refresh_token>"
+}
+```
+Server akan mengembalikan `accessToken` yang baru.
+
+#### Soft-Refresh (Otomatis)
+Middleware API memiliki fitur *soft-refresh*. Jika access token yang Anda kirimkan masa berlakunya tinggal **< 15 menit**, server akan secara otomatis menghasilkan token baru dan mengirimkannya kembali melalui header respon `Authorization`. Pastikan aplikasi klien Anda selalu memeriksa header ini dan memperbarui token yang disimpan.
+
+### Daftar Endpoint
 
 ### 🟢 Modul User (Base Path: `/api/v1/users`)
 * `POST /api/v1/users/register` - Registrasi user/admin baru.

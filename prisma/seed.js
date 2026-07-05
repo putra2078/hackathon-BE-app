@@ -1,66 +1,70 @@
 const prisma = require("../internal/pkg/prisma");
 
 async function main() {
-  console.log("🌱 Start seeding...");
+  console.log("🌱 Start seeding for reporting test...");
 
-  // Clear existing products
+  // Clear existing data
+  await prisma.boughtProductDetail.deleteMany();
+  await prisma.detailTransaction.deleteMany();
+  await prisma.transaction.deleteMany();
+  await prisma.expense.deleteMany();
+  await prisma.stockIncrement.deleteMany();
   await prisma.product.deleteMany();
-  console.log("Cleaned up existing products.");
+  await prisma.category.deleteMany();
+  await prisma.user.deleteMany();
 
-  const products = [
-    {
-      code: "PRD001",
-      name: "Laptop Asus ROG",
-      description: "Gaming laptop with high performance",
-      category: "Electronics",
-      buyPrice: 13000000,
-      sellPrice: 15000000,
-      stock: 10,
+  // Create User
+  const user = await prisma.user.create({
+    data: {
+      name: "Admin",
+      email: "admin@example.com",
+      password: "password123", // Should be hashed in real scenarios
     },
-    {
-      code: "PRD002",
-      name: "Mechanical Keyboard",
-      description: "RGB Backlit mechanical keyboard with blue switches",
-      category: "Accessories",
-      buyPrice: 600000,
-      sellPrice: 850000,
-      stock: 25,
-    },
-    {
-      code: "PRD003",
-      name: "Gaming Mouse",
-      description: "Wireless gaming mouse with 16000 DPI",
-      category: "Accessories",
-      buyPrice: 300000,
-      sellPrice: 450000,
-      stock: 50,
-    },
-    {
-      code: "PRD004",
-      name: "UltraWide Monitor 34\"",
-      description: "4K resolution ultrawide monitor for productivity",
-      category: "Electronics",
-      buyPrice: 6500000,
-      sellPrice: 7500000,
-      stock: 5,
-    },
-    {
-      code: "PRD005",
-      name: "USB-C Hub 7-in-1",
-      description: "Multiport adapter for MacBook and Windows laptops",
-      category: "Accessories",
-      buyPrice: 200000,
-      sellPrice: 350000,
-      stock: 100,
-    },
-  ];
+  });
 
-  for (const product of products) {
-    const created = await prisma.product.create({
-      data: product,
-    });
-    console.log(`Created product: ${created.name} (ID: ${created.id})`);
-  }
+  // Create Categories
+  const electronics = await prisma.category.create({ data: { name: "Electronics" } });
+  const accessories = await prisma.category.create({ data: { name: "Accessories" } });
+
+  // Create Products
+  const p1 = await prisma.product.create({
+    data: { code: "P1", name: "Laptop", buyPrice: 10000000, sellPrice: 12000000, stock: 10, categoryId: electronics.id },
+  });
+  const p2 = await prisma.product.create({
+    data: { code: "P2", name: "Mouse", buyPrice: 100000, sellPrice: 200000, stock: 50, categoryId: accessories.id },
+  });
+
+  // Create Expenses
+  await prisma.expense.createMany({
+    data: [
+      { name: "Listrik", amount: 500000, category: "Operasional" },
+      { name: "Internet", amount: 300000, category: "Operasional" },
+    ],
+  });
+
+  // Create Transaction
+  const transaction = await prisma.transaction.create({
+    data: {
+      userId: user.id,
+      totalPrice: 12200000,
+      status: "SUCCESS",
+      detailTransactions: {
+        create: {
+          totalCapital: 10100000,
+          totalProfit: 2100000,
+          paymentAmount: 12200000,
+          changeAmount: 0,
+          paymentMethod: "CASH",
+          boughtProducts: {
+            create: [
+              { productId: p1.id, name: p1.name, code: p1.code, buyPrice: p1.buyPrice, sellPrice: p1.sellPrice, quantity: 1, subtotal: 12000000 },
+              { productId: p2.id, name: p2.name, code: p2.code, buyPrice: p2.buyPrice, sellPrice: p2.sellPrice, quantity: 1, subtotal: 200000 },
+            ],
+          },
+        },
+      },
+    },
+  });
 
   console.log("✅ Seeding finished.");
 }

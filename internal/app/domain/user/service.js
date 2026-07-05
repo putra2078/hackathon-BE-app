@@ -6,11 +6,7 @@
 const userRepository = require("./repository");
 const { UserResponse } = require("./dto");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "../../../../.env") });
-
-const secretKey = process.env.JWT_SECRET || "your-default-secret-key";
+const { generateToken, generateRefreshToken, verifyToken } = require("../../../pkg/jwt_utils");
 
 const getAllUsers = async () => {
   const users = await userRepository.findAll();
@@ -32,16 +28,28 @@ const login = async (email, password) => {
     throw error;
   }
 
-  const token = jwt.sign(
-    { id: user.id, email: user.email, name: user.name },
-    secretKey,
-    { expiresIn: "1d" },
-  );
+  const payload = { id: user.id, email: user.email, name: user.name };
+  const accessToken = generateToken(payload);
+  const refreshToken = generateRefreshToken(payload);
 
   return {
     user: UserResponse(user),
-    token,
+    accessToken,
+    refreshToken,
   };
+};
+
+const refresh = async (refreshToken) => {
+  try {
+    const decoded = verifyToken(refreshToken);
+    const { iat, exp, ...userPayload } = decoded;
+    const newAccessToken = generateToken(userPayload);
+    return { accessToken: newAccessToken };
+  } catch (error) {
+    const err = new Error("Invalid or expired refresh token");
+    err.statusCode = 401;
+    throw err;
+  }
 };
 
 const getUserById = async (id) => {
@@ -125,6 +133,7 @@ const deleteUser = async (id) => {
 module.exports = {
   getAllUsers,
   login,
+  refresh,
   getUserById,
   createUser,
   updateUser,

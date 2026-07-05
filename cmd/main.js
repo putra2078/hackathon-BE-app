@@ -5,7 +5,13 @@ require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const fs = require("fs");
 const winston = require("winston");
 
+const { initSocket } = require("../internal/app/domain/chatbot/websocket");
+
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+initSocket(server);
+
 const PORT = process.env.PORT || 3001;
 
 // Create logs directory
@@ -106,6 +112,10 @@ app.delete("/test", (req, res) => {
 });
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = server;
